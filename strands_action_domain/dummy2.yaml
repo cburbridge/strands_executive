@@ -1,0 +1,13 @@
+ActionName:    launch
+
+ActionServer:  run_launch_file
+
+ActionServerParameters:
+    launch_file:  ?param1
+
+ParameterTypes:
+    param2:  string
+
+#Preconditions: (what)
+Effects: (running ?param1)
+

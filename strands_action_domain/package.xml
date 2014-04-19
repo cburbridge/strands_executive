@@ -13,5 +13,6 @@
 
   <export>
 	<strands_action_domain action="${prefix}/dummy.yaml"/>
+	<strands_action_domain action="${prefix}/dummy2.yaml"/>
   </export>
 </package>
