@@ -16,7 +16,7 @@ class DomainDefinition(object):
     """
     A class for domain definitions learned from examples.
     To be created by ss_log_to_pdd.
-    Much like PDDL domain definitions, but more specific to the GeRT stuff.
+    Much like PDDL domain definitions, added STRANDS stuff.
     """
 
     #----------------------------------------------------------------------
@@ -327,67 +327,3 @@ class ProblemDefinitionError(Exception):
         else:
             return '\n\n' +repr(self.types[self.type] )
 
-
-# Utilities to fill parameterise actions
-#----------------------------------------------------------------------
-def parameterise_source_frames(source, frame_string):
-    """Fill in any #PARAMFRAME parts in the supplied source"""
-    isinstance(source, str)
-    ret_source = source
-    pframe = source.find("PARAMFRAME") 
-    if pframe != -1:
-        # Extract the line that does a goto_frame, replace with goto_direct_frame
-        pframe += len("PARAMFRAME")
-        pframeend = source.find('\n', pframe)
-        varname=source[pframe:pframeend].strip()
-        frameline = pframeend + 1
-        framelineend =  source.find('\n', frameline)
-        framestring = source[frameline:framelineend].strip()
-
-        replace="%s = %s"% (varname, frame_string)
-        ret_source = ret_source.replace( framestring, replace )
-    return ret_source
-   
-
-#----------------------------------------------------------------------
-def parameterise_source_strings(source, p_strings):
-    """Fill in any #P1STRING or #P2STRING parts in the supplied source"""
-    ret_source = source
-    pstring = source.find("P1STRING")
-    if  pstring != -1:
-        # Find any occurances of parameterised strings and fill them.
-        # This really only happens so that rave.bind binds the correct object...
-        pstring += len("P1STRING")
-        pstringend = source.find('\n', pstring)
-        paramstring = source[pstring:pstringend].strip()
-        #print "Inserting parameter [0] (%s) into replace " % planned_action[0][1][0], paramstring
-        ret_source = source[:pstring] + source[pstring:].replace(paramstring, p_strings[0])
-        pass
-    
-    pstring = source.find("P2STRING")
-    if  pstring != -1:
-        # Find any occurances of parameterised strings and fill them.
-        # This really only happens so that rave.bind binds the correct object...
-        pstring += len("P2STRING")
-        pstringend = source.find('\n', pstring)
-        paramstring = source[pstring:pstringend].strip()
-        #print "Inserting parameter [0] (%s) into replace " % planned_action[0][1][0], paramstring
-        ret_source = ret_source[:pstring] + ret_source[pstring:].replace(paramstring, p_strings[1])
-        pass
-
-    return ret_source
-
-#----------------------------------------------------------------------
-def get_annotated_preconditions(source):
-    """Extract annotated conditions"""
-    isinstance(source, str)
-    for i in source.splitlines():
-        isinstance(i, str)
-        if i.startswith("#PRECONDITION "):
-            c = i[len("#PRECONDITION "):]
-            annotated = state.SymbolicState.createFromString(c)
-            break;  # only need only line per action I guess....
-    else:
-        return state.SymbolicState()
-    print "PRECONDITION ANNOTATED:", annotated
-    return annotated
