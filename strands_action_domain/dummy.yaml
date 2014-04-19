@@ -1,0 +1,16 @@
+ActionName:    test43
+
+ActionServer:  test_action_server
+
+ActionServerParameters:
+    example_1:  45
+    example_2:  testing
+    example_3:  34.56
+    example_4:  ?param1
+
+ParameterTypes:
+    param1:  string
+
+Preconditions: (running ?param1)
+
+#Effects: (something)
